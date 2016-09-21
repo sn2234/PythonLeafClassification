@@ -31,9 +31,14 @@ print("Fitting model...")
 y_train_cat = np_utils.to_categorical(y_train, nb_classes)
 y_cv_cat = np_utils.to_categorical(y_cv, nb_classes)
 
-model.fit(x_train, y_train_cat)
+model.fit(x_train, y_train_cat, nb_epoch=15)
 
 y_pred = model.predict(x_cv)
 
 score, acc = model.evaluate(x_cv, y_cv_cat)
 print("Accuracy on CV dataset: {0}".format(acc))
+
+y_test_p = model.predict(DataModel.x_test)
+of = DataModel.prepareOutput(y_test_p, DataModel.csvTest.id.values)
+
+of.to_csv('out.csv', index=False)
