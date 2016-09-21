@@ -3,6 +3,7 @@ import numpy as np
 import sklearn.metrics as metrics
 from sklearn import cross_validation
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestRegressor
 
 import matplotlib.pyplot as plt
 
@@ -15,7 +16,10 @@ rfClf = RandomForestClassifier()
 rfClf.fit(x_train, y_train)
 y_pred = rfClf.predict(x_cv)
 
-metrics.accuracy_score(y_cv, y_pred)
-metrics.confusion_matrix(y_cv, y_pred)
-#metrics.classification_report(y_cv, y_pred)
 
+print("Acc on CV dataset: {0}".format(metrics.accuracy_score(y_cv, y_pred)))
+
+y_test_p = rfClf.predict_proba(DataModel.x_test)
+of = DataModel.prepareOutput(y_test_p, DataModel.csvTest.id.values)
+
+of.to_csv('out.csv', index=False)
