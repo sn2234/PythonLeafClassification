@@ -19,9 +19,9 @@ nb_classes = 99
 
 model = Sequential()
 model.add(Dense(2000, input_shape=(x_train.shape[1],), activation='relu'))
-model.add(Dropout(0.15))
+model.add(Dropout(0.2))
 model.add(Dense(2000, activation='relu'))
-model.add(Dropout(0.15))
+model.add(Dropout(0.2))
 model.add(Dense(nb_classes, activation='softmax'))
 model.compile(optimizer='rmsprop',
                 loss='categorical_crossentropy',
@@ -31,7 +31,7 @@ print("Fitting model...")
 y_train_cat = np_utils.to_categorical(y_train, nb_classes)
 y_cv_cat = np_utils.to_categorical(y_cv, nb_classes)
 
-model.fit(x_train, y_train_cat, nb_epoch=15)
+model.fit(x_train, y_train_cat, nb_epoch=30)
 
 y_pred = model.predict(x_cv)
 
