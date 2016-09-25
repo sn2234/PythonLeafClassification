@@ -32,7 +32,15 @@ pool_size = (2, 2)
 # convolution kernel size
 kernel_size = (3, 3)
 
-
+def loadImages(ids):
+    imgPaths = [join(DataModel.trainImagesDir, "{0}.jpg".format(path)) for path in ids]
+    imgs = [image.load_img(path, grayscale=True, target_size=(img_dim_x, img_dim_y))
+            for path in imgPaths
+            ]
+    imgArrays = [image.img_to_array(i) for i in imgs]
+    
+    return imgArrays
+    
 model = Sequential()
 
 model.add(Convolution2D(nb_filters, kernel_size[0], kernel_size[1],
@@ -81,11 +89,7 @@ model.compile(loss='categorical_crossentropy',
 
 csvSubset = DataModel.imageSpecies.sample(900)
 
-imgPaths = [join(DataModel.trainImagesDir, "{0}.jpg".format(path)) for path in csvSubset.id]
-imgs = [image.load_img(path, grayscale=True, target_size=(img_dim_x, img_dim_y))
-        for path in imgPaths
-        ]
-imgArrays = [image.img_to_array(i) for i in imgs]
+imgArrays = loadImages(csvSubset.id)
 
 y = csvSubset.species_id.values
 y_cat = np_utils.to_categorical(y, nb_classes)
@@ -93,3 +97,11 @@ x = np.vstack(imgArrays).reshape((len(imgArrays), 1, img_dim_y, img_dim_x))
 
 model.fit(x, y_cat, nb_epoch=50)
 #model.save_weights('model1.bin')
+model.load_weights('model1.bin')
+
+imgArraysTest = loadImages(DataModel.csvTest.id)
+x_test = np.vstack(imgArraysTest).reshape((len(imgArraysTest), 1, img_dim_y, img_dim_x))
+y_test_cat = model.predict(x_test)
+of = DataModel.prepareOutput(y_test_cat, DataModel.csvTest.id.values)
+
+of.to_csv('out.csv', index=False)
