@@ -25,6 +25,9 @@
     <Compile Include="DataModel.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="PredictOnImages.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="PythonLeafClassification.py" />
     <Compile Include="SimpleNN.py">
       <SubType>Code</SubType>

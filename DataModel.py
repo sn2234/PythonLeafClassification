@@ -21,6 +21,8 @@ csvTest = pd.read_csv(testDescFile)
 
 x_test = csvTest[[c for c in csvRaw.columns if c not in excludedFromTrain]].values
 
+imageSpecies = csvRaw[['id', 'species_id']]
+
 def prepareOutput(y, ids):
     assert(y.shape[1] == len(enc.classes_))
 
