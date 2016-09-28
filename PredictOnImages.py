@@ -92,16 +92,24 @@ csvSubset = DataModel.imageSpecies.sample(900)
 imgArrays = loadImages(csvSubset.id)
 
 y = csvSubset.species_id.values
-y_cat = np_utils.to_categorical(y, nb_classes)
 x = np.vstack(imgArrays).reshape((len(imgArrays), 1, img_dim_y, img_dim_x))
 
-model.fit(x, y_cat, nb_epoch=50)
+(x_train, x_cv, y_train, y_cv) = cross_validation.train_test_split(x, y, test_size=0.2)
+
+
+y_train_cat = np_utils.to_categorical(y_train, nb_classes)
+
+model.fit(x_train, y_train_cat, nb_epoch=20)
 #model.save_weights('model1.bin')
-model.load_weights('model1.bin')
+#model.load_weights('model1.bin')
 
-imgArraysTest = loadImages(DataModel.csvTest.id)
-x_test = np.vstack(imgArraysTest).reshape((len(imgArraysTest), 1, img_dim_y, img_dim_x))
-y_test_cat = model.predict(x_test)
-of = DataModel.prepareOutput(y_test_cat, DataModel.csvTest.id.values)
+y_cv_cat = np_utils.to_categorical(y_cv, nb_classes)
 
-of.to_csv('out.csv', index=False)
+model.evaluate(x_cv, y_cv_cat)
+
+#imgArraysTest = loadImages(DataModel.csvTest.id)
+#x_test = np.vstack(imgArraysTest).reshape((len(imgArraysTest), 1, img_dim_y, img_dim_x))
+#y_test_cat = model.predict(x_test)
+#of = DataModel.prepareOutput(y_test_cat, DataModel.csvTest.id.values)
+
+#of.to_csv('out.csv', index=False)
