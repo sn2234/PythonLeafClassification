@@ -245,3 +245,4 @@ ModelManifest.xml
 .fake/
 /__pycache__
 /*.csv
+/*.bin

@@ -99,6 +99,19 @@ x = np.vstack(imgArrays).reshape((len(imgArrays), 1, img_dim_y, img_dim_x))
 
 y_train_cat = np_utils.to_categorical(y_train, nb_classes)
 
+# Use generator to produce additional images
+datagen = image.ImageDataGenerator(
+                    rotation_range=90,
+                    width_shift_range=0.2,
+                    height_shift_range=0.2,
+                    rescale=1./255,
+                    shear_range=0.2,
+                    zoom_range=0.2,
+                    horizontal_flip=True,
+                    fill_mode='nearest')
+
+model.fit_generator(datagen.flow(x_train, y_train_cat), samples_per_epoch = 100, nb_epoch = 30)
+
 model.fit(x_train, y_train_cat, nb_epoch=20)
 #model.save_weights('model1.bin')
 #model.load_weights('model1.bin')
