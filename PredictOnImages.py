@@ -1,4 +1,6 @@
 
+import SetEnvForGpu
+
 import numpy as np
 np.random.seed(123456)  # for reproducibility
 
@@ -50,7 +52,7 @@ model.add(Activation('relu'))
 model.add(Convolution2D(nb_filters, kernel_size[0], kernel_size[1]))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=pool_size))
-model.add(Dropout(0.1))
+model.add(Dropout(0.3))
 
 model.add(Convolution2D(nb_filters*2, kernel_size[0], kernel_size[1],
                         border_mode='valid'))
@@ -58,7 +60,7 @@ model.add(Activation('relu'))
 model.add(Convolution2D(nb_filters*2, kernel_size[0], kernel_size[1]))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=pool_size))
-model.add(Dropout(0.1))
+model.add(Dropout(0.3))
 
 model.add(Convolution2D(nb_filters*2, kernel_size[0], kernel_size[1],
                         border_mode='valid'))
@@ -71,15 +73,15 @@ model.add(Activation('relu'))
 model.add(Convolution2D(nb_filters*2, kernel_size[0], kernel_size[1]))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=pool_size))
-model.add(Dropout(0.1))
+model.add(Dropout(0.3))
 
 model.add(Flatten())
 model.add(Dense(128))
 model.add(Activation('relu'))
-model.add(Dropout(0.2))
+model.add(Dropout(0.3))
 model.add(Dense(128))
 model.add(Activation('relu'))
-model.add(Dropout(0.2))
+model.add(Dropout(0.3))
 model.add(Dense(nb_classes))
 model.add(Activation('softmax'))
 
@@ -87,7 +89,9 @@ model.compile(loss='categorical_crossentropy',
               optimizer='adadelta',
               metrics=['accuracy'])
 
-csvSubset = DataModel.imageSpecies.sample(900)
+csvSubset = DataModel.imageSpecies #.sample(900)
+
+subsetSize = csvSubset.shape[0]
 
 imgArrays = loadImages(csvSubset.id)
 
@@ -102,17 +106,18 @@ y_train_cat = np_utils.to_categorical(y_train, nb_classes)
 # Use generator to produce additional images
 datagen = image.ImageDataGenerator(
                     rotation_range=90,
-                    width_shift_range=0.2,
-                    height_shift_range=0.2,
-                    rescale=1./255,
+                    width_shift_range=0.1,
+                    height_shift_range=0.1,
+                    #rescale=1./255,
                     shear_range=0.2,
-                    zoom_range=0.2,
+                    #zoom_range=0.2,
                     horizontal_flip=True,
                     fill_mode='nearest')
 
-model.fit_generator(datagen.flow(x_train, y_train_cat), samples_per_epoch = 100, nb_epoch = 30)
+model.fit_generator(datagen.flow(x_train, y_train_cat), samples_per_epoch = len(x_train), nb_epoch = 20)
 
-model.fit(x_train, y_train_cat, nb_epoch=20)
+model.fit(x_train, y_train_cat, nb_epoch=30)
+
 #model.save_weights('model1.bin')
 #model.load_weights('model1.bin')
 
@@ -126,3 +131,21 @@ model.evaluate(x_cv, y_cv_cat)
 #of = DataModel.prepareOutput(y_test_cat, DataModel.csvTest.id.values)
 
 #of.to_csv('out.csv', index=False)
+
+nb_epoch=1
+for e in range(nb_epoch):
+    print('Epoch: {0}'.format(e))
+    batches = 0
+    for X_batch, Y_batch in datagen.flow(x_train, y_train_cat, batch_size=32):
+        print("Training on batch: X_batch: {0}, Y_batch: {1}".format(X_batch.shape, Y_batch.shape))
+        print("Sample image, class: {0}".format(Y_batch[0]))
+        plt.imshow(image.array_to_img(X_batch[0]))
+        loss = model.train_on_batch(X_batch, Y_batch)
+        print("Loss: {0}".format(loss))
+        batches += 1
+        if batches >= len(x_train) / 32:
+            # we need to break the loop by hand because
+            # the generator loops indefinitely
+            break
+
+#xx = datagen.flow(x_train, y_train_cat, batch_size=50)

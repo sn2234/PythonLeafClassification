@@ -22,14 +22,24 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="conv_filter_visualization.py" />
     <Compile Include="DataModel.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Model.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PredictOnImages.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PythonLeafClassification.py" />
+    <Compile Include="SetEnvForGpu.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="SimpleNN.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TrainModel.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
