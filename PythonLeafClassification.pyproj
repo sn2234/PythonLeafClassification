@@ -29,6 +29,9 @@
     <Compile Include="Model.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ModelDream.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="PredictOnImages.py">
       <SubType>Code</SubType>
     </Compile>
@@ -40,6 +43,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="TrainModel.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="VisualizeModel.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

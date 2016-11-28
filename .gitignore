@@ -246,3 +246,4 @@ ModelManifest.xml
 /__pycache__
 /*.csv
 /*.bin
+*.png
