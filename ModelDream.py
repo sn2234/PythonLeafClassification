@@ -1,3 +1,4 @@
+from __future__ import print_function
 
 import SetEnvForGpu
 
@@ -6,8 +7,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.misc import imsave
 from scipy.optimize import fmin_l_bfgs_b
-
-from __future__ import print_function
 
 from keras.preprocessing.image import load_img, img_to_array
 from keras.utils import np_utils

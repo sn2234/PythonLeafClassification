@@ -35,6 +35,9 @@
     <Compile Include="PredictOnImages.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="PrepareImages.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="PythonLeafClassification.py" />
     <Compile Include="SetEnvForGpu.py">
       <SubType>Code</SubType>
