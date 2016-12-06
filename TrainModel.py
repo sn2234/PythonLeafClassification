@@ -17,22 +17,12 @@ from keras.utils import np_utils
 
 import DataModel
 import Model
-
-# Define some helper functions
-
-def loadImages(ids):
-    imgPaths = [join(DataModel.trainImagesDir, "{0}.jpg".format(path)) for path in ids]
-    imgs = [image.load_img(path, grayscale=True, target_size=(Model.img_dim_x, Model.img_dim_y))
-            for path in imgPaths
-            ]
-    imgArrays = [image.img_to_array(i) for i in imgs]
-    
-    return imgArrays
+import PrepareImages
 
 # Load data in approptiate format    
 csvSubset = DataModel.imageSpecies #.sample(900)
 subsetSize = csvSubset.shape[0]
-imgArrays = loadImages(csvSubset.id)
+imgArrays = PrepareImages.loadImages(DataModel.trainImagesDir, csvSubset.id, Model.img_dim_x)
 y = csvSubset.species_id.values
 x = np.vstack(imgArrays).reshape((len(imgArrays), 1, Model.img_dim_y, Model.img_dim_x))
 (x_train, x_cv, y_train, y_cv) = cross_validation.train_test_split(x, y, test_size=0.2)
@@ -45,10 +35,7 @@ def fitWithGenerator():
     # Use generator to produce additional images
     datagen = image.ImageDataGenerator(
                         rotation_range=90,
-                        width_shift_range=0.1,
-                        height_shift_range=0.1,
-                        #rescale=1./255,
-                        shear_range=0.2,
+                        #shear_range=0.2,
                         #zoom_range=0.2,
                         horizontal_flip=True,
                         fill_mode='nearest')
