@@ -17,6 +17,7 @@ from keras.layers import Convolution2D, MaxPooling2D, LocallyConnected2D
 from keras.utils import np_utils
 
 import DataModel
+import PrepareImages
 
 # Network params
 batch_size = 128
@@ -34,15 +35,6 @@ pool_size = (2, 2)
 # convolution kernel size
 kernel_size = (3, 3)
 
-def loadImages(ids):
-    imgPaths = [join(DataModel.trainImagesDir, "{0}.jpg".format(path)) for path in ids]
-    imgs = [image.load_img(path, grayscale=True, target_size=(img_dim_x, img_dim_y))
-            for path in imgPaths
-            ]
-    imgArrays = [image.img_to_array(i) for i in imgs]
-    
-    return imgArrays
-    
 model = Sequential()
 
 model.add(Convolution2D(nb_filters, kernel_size[0], kernel_size[1],
@@ -93,7 +85,7 @@ csvSubset = DataModel.imageSpecies #.sample(900)
 
 subsetSize = csvSubset.shape[0]
 
-imgArrays = loadImages(csvSubset.id)
+imgArrays = PrepareImages.loadImages(DataModel.trainImagesDir, csvSubset.id, img_dim_x)
 
 y = csvSubset.species_id.values
 x = np.vstack(imgArrays).reshape((len(imgArrays), 1, img_dim_y, img_dim_x))
@@ -116,7 +108,7 @@ datagen = image.ImageDataGenerator(
 
 model.fit_generator(datagen.flow(x_train, y_train_cat), samples_per_epoch = len(x_train), nb_epoch = 20)
 
-model.fit(x_train, y_train_cat, nb_epoch=30)
+model.fit(x_train, y_train_cat, nb_epoch=100)
 
 #model.save_weights('model1.bin')
 #model.load_weights('model1.bin')
