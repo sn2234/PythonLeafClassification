@@ -51,28 +51,3 @@ def loadImages(imagesDir, ids, squareSide):
             ]
     
     return imgs
-
-def transformImages():
-    import DataModel
-    import Model
-
-    csvSubset = DataModel.imageSpecies #.sample(900)
-    subsetSize = csvSubset.shape[0]
-    assert(Model.img_dim_x == Model.img_dim_y)
-    imgArrays = loadImages(DataModel.trainImagesDir, csvSubset.id, Model.img_dim_x)
-
-    targetPath = join(DataModel.trainImagesDir, "Transformed")
-
-    if not os.path.exists(targetPath):
-        os.makedirs(targetPath)
-
-    for i in range(len(imgArrays)):
-        img = imgArrays[i]
-        imsave(join(targetPath, "{0}.jpg".format(csvSubset.id[i])), img)
-
-
-##testImage = join(DataModel.trainImagesDir, "1065.jpg")
-#testImage = join(DataModel.trainImagesDir, "10.jpg")
-
-#rawImg = imread(testImage, mode = 'L')
-

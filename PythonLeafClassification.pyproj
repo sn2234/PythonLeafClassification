@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>078ea4b3-eed8-49bd-9008-6f70c4f636d7</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>PythonLeafClassification.py</StartupFile>
+    <StartupFile>Sandbox.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -39,6 +39,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PythonLeafClassification.py" />
+    <Compile Include="Sandbox.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="SetEnvForGpu.py">
       <SubType>Code</SubType>
     </Compile>
