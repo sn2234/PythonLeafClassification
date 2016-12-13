@@ -33,14 +33,30 @@ model = Model.createModelDefinition()
 
 def fitWithGenerator():
     # Use generator to produce additional images
-    datagen = image.ImageDataGenerator(
-                        rotation_range=90,
+    datagen = image.ImageDataGenerator(rotation_range=360,
                         #shear_range=0.2,
                         #zoom_range=0.2,
                         horizontal_flip=True,
                         fill_mode='nearest')
 
-    model.fit_generator(datagen.flow(x_train, y_train_cat), samples_per_epoch = len(x_train), nb_epoch = 20)
+    #model.fit_generator(datagen.flow(x_train, y_train_cat), samples_per_epoch = len(x_train), nb_epoch = 20)
+    epoch = 0
+    maxEpochs = 5
+    itemsPerBatch = 200
+    trainBatchSize = 100
+    for X_batch, Y_batch in datagen.flow(x_train, y_train_cat, batch_size=itemsPerBatch):
+
+        items = X_batch.shape[0]
+        print("Items: {0}".format(items))
+        loss = model.train_on_batch(X_batch[:(items//2)], Y_batch[:(items//2)])
+        print("Epoch: {0}.1, Loss: {0}".format(epoch, loss))
+        loss = model.train_on_batch(X_batch[(items//2):], Y_batch[(items//2):])
+        print("Epoch: {0}.2, Loss: {0}".format(epoch, loss))
+
+        epoch = epoch + 1
+        if epoch > maxEpochs:
+            break
+
 
 def fitWithRawData():
     model.fit(x_train, y_train_cat, nb_epoch=30)
