@@ -62,6 +62,35 @@ def fitWithGenerator():
         if epoch > maxEpochs:
             break
 
+def fitWithGeneratorBigList():
+    # Use generator to produce additional images
+    datagen = image.ImageDataGenerator(rotation_range=360,
+                        #shear_range=0.2,
+                        #zoom_range=0.2,
+                        horizontal_flip=True,
+                        fill_mode='nearest')
+
+    epoch = 0
+    maxEpochs = 10
+    itemsPerBatch = 300
+
+    lX = []
+    lY = []
+
+    for X_batch, Y_batch in datagen.flow(x_train, y_train_cat, batch_size=itemsPerBatch):
+
+        lX.append(X_batch)
+        lY.append(Y_batch)
+
+        epoch = epoch + 1
+        if epoch > maxEpochs:
+            break
+
+    X = np.vstack(lX)
+    Y = np.vstack(lY)
+
+    model.fit(X, Y, nb_epoch=20)
+
 
 def fitWithRawData():
     model.fit(x_train, y_train_cat, nb_epoch=30)
